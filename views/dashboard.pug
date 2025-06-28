@@ -1,0 +1,182 @@
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Waste 2 Wings - Dashboard
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css")
+    style.
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .container {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        padding: 40px;
+        width: 90%;
+        max-width: 800px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .dashboard-header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #e0e0e0;
+      }
+
+      .dashboard-header h1 {
+        color: #2c3e50;
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .welcome-section {
+        background: linear-gradient(135deg, #74b9ff, #0984e3);
+        color: white;
+        padding: 25px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        text-align: center;
+        box-shadow: 0 10px 20px rgba(116, 185, 255, 0.3);
+      }
+
+      .welcome-section h2 {
+        font-size: 1.8rem;
+        margin-bottom: 10px;
+      }
+
+      .welcome-section span {
+        font-weight: bold;
+        color: #fdcb6e;
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        padding: 12px 30px;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 500;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      .btn-secondary {
+        background: linear-gradient(135deg, #fd79a8, #e84393);
+        color: white;
+      }
+
+      .btn-secondary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(253, 121, 168, 0.4);
+      }
+
+      .btn-danger {
+        background: linear-gradient(135deg, #ff7675, #d63031);
+        color: white;
+      }
+
+      .btn-danger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 118, 117, 0.4);
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 20px;
+          margin: 20px;
+        }
+
+        .dashboard-header h1 {
+          font-size: 2rem;
+        }
+
+        .welcome-section h2 {
+          font-size: 1.4rem;
+        }
+
+        .action-buttons {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .btn {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+
+  body
+    .container#dashboard
+      .dashboard-header
+        h1
+          i.fas.fa-recycle
+          |  Waste to Wings
+        p Transform waste into opportunity
+
+      .welcome-section
+        h2
+          | Welcome to 
+          span Waste to Wings
+        p Your journey towards sustainable waste management begins here
+
+      .action-buttons
+        button.btn.btn-primary(type="button", onclick="redirectToLogin()")
+          i.fas.fa-sign-in-alt
+          | Admin Login
+        a.btn.btn-secondary(href="#")
+          i.fas.fa-plus
+          | Add New Project
+        button.btn.btn-danger(type="button", onclick="logout()")
+          i.fas.fa-sign-out-alt
+          | Logout
+
+    script.
+      function redirectToLogin() {
+        window.location.href = 'login.html';
+      }
+
+      function logout() {
+        if (confirm('Are you sure you want to logout?')) {
+          alert('You have been logged out successfully.');
+          window.location.href = 'login.html';
+        }
+      }
