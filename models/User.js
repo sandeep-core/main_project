@@ -1,19 +1,19 @@
 const mongoose = require('mongoose');
 
-const addressSchema = new mongoose.Schema({
-  street: String,
-  city: String,
-  state: String,
-  pincode: String
-});
-
-const userSchema = new mongoose.Schema({
-  name: String,
-  email: { type: String, unique: true },
-  password: String,
-  phone: String,
-  address: addressSchema,
-  user_signup_date: { type: Date, default: Date.now }
-});
+const userSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    role: {
+      type: String,
+      enum: ['user', 'admin'],
+      default: 'user',
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
 module.exports = mongoose.model('User', userSchema);
