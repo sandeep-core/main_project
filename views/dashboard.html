@@ -452,7 +452,7 @@ for dashboard:
     <nav class="navbar" id="navbar">
         <div class="nav-container">
             <div class="logo">
-                <i class="fas fa-recycle"></i> Waste to Wings
+                <i class="fas fa-recycle"></i> Waste 2 Wings
             </div>
             <ul class="nav-links">
                 <li><a href="home.html">Home</a></li>
@@ -628,7 +628,7 @@ for dashboard:
             const user = localStorage.getItem('currentUser');
             
             if (!user) {
-                window.location.href = 'auth.html';
+                window.location.href = 'login.html';
                 return;
             }
             
@@ -643,7 +643,7 @@ for dashboard:
         
         function logout() {
             localStorage.removeItem('currentUser');
-            window.location.href = 'index.html';
+            window.location.href = 'home.html';
         }
         
         function showWasteForm() {
@@ -663,11 +663,9 @@ for dashboard:
             const orgName = document.getElementById('orgName').value;
             const orgType = document.getElementById('orgType').value;
             const wasteType = document.getElementById('wasteType').value;
-            
-            // In a real app, this would be an API call to submit the form
-            alert(Thank you for registering as a waste producer!\n\nOrganization: ${orgName}\nType: ${orgType}\nWaste Type: ${wasteType}\n\nOur team will contact you shortly to arrange waste collection );
-        
-            // Reset form
+            alert(`Thank you for registering as a waste producer! Organization: ${orgName}Type: ${orgType}Waste Type: ${wasteType} Our team will contact you shortly to arrange waste collection.`);
+
+    // Reset form
             document.getElementById('wasteProducerForm').reset();
             wasteForm.classList.add('hidden');
         }

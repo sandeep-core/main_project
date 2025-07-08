@@ -676,7 +676,7 @@ for homepage:
                         </button>
                         <div class="user-dropdown-content">
                             <a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-                            <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                            <a href="login.html" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
                         </div>
                     </div>
                 </li>
@@ -694,7 +694,7 @@ for homepage:
     <section class="hero">
         <div class="hero-content">
             <h1>Waste to Wings</h1>
-            <p>Converting Temple & Food Waste into Premium Insect Protein using AI & Smart Technology</p>
+            <p>Converting  Waste into new product using new Technology</p>
             <div class="hero-buttons">
                 <button class="btn btn-primary" onclick="scrollToProducts()">
                     <i class="fas fa-shopping-bag"></i> Shop Products
@@ -902,7 +902,7 @@ for homepage:
             localStorage.removeItem('currentUser');
             currentUser = null;
             updateNavigation();
-            window.location.href = 'index.html';
+            window.location.href = 'home.html';
         }
         
         function scrollToProducts() {
@@ -976,52 +976,51 @@ for homepage:
                 cartItems.appendChild(itemElement);
             });
             
-            // Update total and count
-            cartTotal.textContent = Total: ₹${total};
-            cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartTotal.textContent = `Total: ₹${cart.reduce((sum, item) => sum + item.price * item.quantity, 0)}`;
+cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+function changeQuantity(name, change) {
+    const item = cart.find(item => item.name === name);
+
+    if (item) {
+        item.quantity += change;
+
+        // Remove if quantity is 0 or less
+        if (item.quantity <= 0) {
+            cart = cart.filter(i => i.name !== name);
         }
-        
-        function changeQuantity(name, change) {
-            const item = cart.find(item => item.name === name);
-            
-            if (item) {
-                item.quantity += change;
-                
-                // Remove if quantity is 0 or less
-                if (item.quantity <= 0) {
-                    cart = cart.filter(i => i.name !== name);
-                }
-                
-                updateCart();
-                // Save cart to localStorage
-                localStorage.setItem('cart', JSON.stringify(cart));
-            }
+
+        updateCart();
+        // Save cart to localStorage
+        localStorage.setItem('cart', JSON.stringify(cart));
+    }
+}
+
+function checkout() {
+    if (cart.length === 0) {
+        alert('Your cart is empty!');
+        return;
+    }
+
+    if (!currentUser) {
+        closeCart();
+        window.location.href = 'login.html'; // Changed 'auth.html' to 'login.html' as per your updated structure
+        return;
+    }
+
+    // In a real app, this would redirect to a checkout page
+    alert(`Checkout complete for ${currentUser.name}!\n\nTotal: ₹${cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)}\n\nThank you for your purchase!`);
+
+    // Clear cart
+    cart = [];
+    updateCart();
+    localStorage.removeItem('cart');
+    toggleCart();
+}
+
+// Close cart when clicking overlay 
+cartOverlay.addEventListener('click', toggleCart);
         }
-        
-        function checkout() {
-            if (cart.length === 0) {
-                alert('Your cart is empty!');
-                return;
-            }
-            
-            if (!currentUser) {
-                closeCart();
-                window.location.href = 'auth.html';
-                return;
-            }
-            
-            // In a real app, this would redirect to a checkout page
-            alert(Checkout complete for ${currentUser.name}!\n\nTotal: ₹${cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)}\n\nThank you for your purchase!);
-            
-            // Clear cart
-            cart = [];
-            updateCart();
-            localStorage.removeItem('cart');
-            toggleCart();
-        }
-        
-        // Close cart when clicking overlay
-        cartOverlay.addEventListener('click', toggleCart);
     </script>
 </body>
 </html>
