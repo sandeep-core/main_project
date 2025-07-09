@@ -1,8 +1,8 @@
-import User from './User.mjs';
-import Product from './Product.mjs';
-import Subscription from './Subscription.mjs';
-import Order from './Order.mjs';
-import Payment from './Payment.mjs';
+import User from './User.js';
+import Product from './Product.js';
+import Subscription from './Subscription.js';
+import Order from './Order.js';
+import Payment from './Payment.js';
 
 export {
   User,

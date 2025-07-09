@@ -15,7 +15,6 @@ const subscriptionRoutes = require('./routes/subscriptions');
 const paymentRoutes = require('./routes/payments');
 const adminRoutes = require('./routes/admin');
 
-dotenv.config();
 const app = express();
 
 // Connect Database

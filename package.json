@@ -1,7 +1,7 @@
 {
   "name": "waste2wing-backend",
   "version": "1.0.0",
-  "description": "lelo pudhina lele",
+  "description": "Project of summer classes",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
