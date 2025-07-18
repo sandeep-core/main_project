@@ -7,6 +7,7 @@ for homepage:
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Waste to Wings - Smart Waste Tech & BSF Farming</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <style>
         /* All the CSS styles from your original file */
         :root {
@@ -816,7 +817,8 @@ for homepage:
         </div>
         <div class="cart-total">
             <div class="total-amount" id="cartTotal">Total: ₹0</div>
-            <button class="fas fa-credit-card" onclick="checkout()">Proceed to Checkout</button>
+            <button class="fas fa-cart-plus" onclick="checkout()">Cash On Delivery</button>
+            <button class="fas fa-cart-plus" onclick="checkoutCart()">Pay Now</button>
         </div>
     </div>
 
@@ -963,7 +965,87 @@ for homepage:
                 localStorage.setItem('cart', JSON.stringify(cart));
             }
         }
-    
+        
+        async function checkoutCart() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const token = currentUser?.token;
+            const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+
+            if (!token) {
+                alert("Please log in to checkout.");
+                window.location.href = 'login.html';
+                return;
+            }
+
+            if (cartItems.length === 0) {
+                alert("Your cart is empty!");
+                return;
+            }
+
+            // Calculate total
+            const amount = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+            try {
+                // 1️⃣ Create Razorpay order from backend
+                const orderRes = await fetch('http://localhost:3001/api/payments/create-order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({ amount })
+                });
+
+                const { orderId, currency } = await orderRes.json();
+
+                // 2️⃣ Open Razorpay popup
+                const options = {
+                key: "rzp_test_iMgDaNjlp2mMOa",  
+                amount: amount * 100,
+                currency,
+                name: "Waste2Wing",
+                description: "Cart Payment",
+                order_id: orderId,
+                handler: async function (response) {
+                    
+                    const orderRes = await fetch('http://localhost:3001/api/orders', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        products: cartItems,
+                        totalAmount: amount,
+                        paymentMethod: 'Razorpay'
+                    })
+                    });
+
+                    if (orderRes.ok) {
+                    localStorage.removeItem('cart');
+                    alert("Payment successful! Order placed.");
+                    window.location.href = "dashboard.html";
+                    } else {
+                    alert("Payment succeeded but saving order failed.");
+                    }
+                },
+                prefill: {
+                    name: currentUser.user.name,
+                    email: currentUser.user.email
+                },
+                theme: {
+                    color: "#2e8b57"
+                }
+                };
+
+                const rzp = new Razorpay(options);
+                rzp.open();
+            } catch (err) {
+                console.error(err);
+                alert("Checkout failed. Please try again.");
+            }
+        }
+        
         async function checkout() {
             if (cart.length === 0) {
                 alert('Your cart is empty!');
@@ -1007,7 +1089,6 @@ for homepage:
                 alert('Failed to place order. Please try again.');
             }
         }
-    
         cartOverlay.addEventListener('click', toggleCart);
     </script>
 </body>
