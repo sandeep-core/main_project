@@ -662,8 +662,8 @@
                 if (!res.ok) throw new Error(data.message);
                 
                 const { token, name, email: userEmail, _id, role } = data;
+                localStorage.setItem('token', data.token);
                 localStorage.setItem('currentUser', JSON.stringify({
-                    token: data.token,
                     name: data.name,
                     email: data.email,
                     role: data.role

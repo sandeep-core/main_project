@@ -2,24 +2,30 @@ const Order = require('../models/Order');
 
 // Create New Order
 const createOrder = async (req, res) => {
-  const { products, totalAmount, paymentMethod } = req.body;
+  try {
+    const { products, totalAmount, paymentMethod } = req.body;
 
-  const order = await Order.create({
-    user: req.user._id,
-    products,
-    totalAmount,
-    paymentMethod,
-  });
+    if (!products || products.length === 0) {
+      return res.status(400).json({ message: 'No products in order' });
+    }
 
-  res.status(201).json(order);
+    const order = await Order.create({
+      user: req.user._id,
+      products,
+      totalAmount,
+      paymentMethod,
+    });
+
+    res.status(201).json(order);
+  } catch (error) {
+    console.error('Order creation error:', error);
+    res.status(500).json({ message: 'Server Error', error: error.message });
+  }
 };
-
-// Get Orders of Logged-In User
 const getUserOrders = async (req, res) => {
   const orders = await Order.find({ user: req.user._id });
   res.json(orders);
 };
-
 module.exports = {
   createOrder,
   getUserOrders,

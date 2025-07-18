@@ -742,7 +742,7 @@ for homepage:
                     <h3 class="product-title">Live BSF Larvae</h3>
                     <div class="product-price">₹2,000/kg</div>
                     <p class="product-description">Fresh Black Soldier Fly larvae for waste processing and protein production. Ideal for sustainable farming.</p>
-                    <button class="addToCart('Live BSF Larvae', 2000)">
+                    <button class="add-to-cart" onclick="addToCart('Live BSF Larvae', 2000)">
                         <i class="fas fa-cart-plus"></i> Add to Cart
                     </button>
                 </div>
@@ -816,18 +816,14 @@ for homepage:
         </div>
         <div class="cart-total">
             <div class="total-amount" id="cartTotal">Total: ₹0</div>
-            <button class="checkout-btn" onclick="checkout()">
-                <i class="fas fa-credit-card"></i> Proceed to Checkout
-            </button>
+            <button class="fas fa-credit-card" onclick="checkout()">Proceed to Checkout</button>
         </div>
     </div>
 
     <script>
-        // Current user data
         let currentUser = null;
         let cart = [];
-        
-        // DOM Elements
+    
         const cartSidebar = document.getElementById('cartSidebar');
         const cartOverlay = document.getElementById('cartOverlay');
         const cartItems = document.getElementById('cartItems');
@@ -836,48 +832,40 @@ for homepage:
         const loginNavItem = document.getElementById('loginNavItem');
         const userNavItem = document.getElementById('userNavItem');
         const navUsername = document.getElementById('navUsername');
-        
-        // Check if user is logged in on page load
-        document.addEventListener('DOMContentLoaded', function() {
+    
+        document.addEventListener('DOMContentLoaded', function () {
             checkLoggedIn();
-            
-            // Initialize cart from localStorage
+    
             const savedCart = localStorage.getItem('cart');
             if (savedCart) {
                 cart = JSON.parse(savedCart);
                 updateCart();
             }
-            
-            // Add animation to elements when they come into view
+    
             const animateOnScroll = () => {
                 const elements = document.querySelectorAll('.product-card, .feature-card');
-                
                 elements.forEach(element => {
                     const elementPosition = element.getBoundingClientRect().top;
                     const screenPosition = window.innerHeight / 1.2;
-                    
                     if (elementPosition < screenPosition) {
                         element.style.opacity = '1';
                         element.style.transform = 'translateY(0)';
                     }
                 });
             };
-            
-            // Set initial state for animation
+    
             document.querySelectorAll('.product-card, .feature-card').forEach(el => {
                 el.style.opacity = '0';
                 el.style.transform = 'translateY(20px)';
                 el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
             });
-            
+    
             window.addEventListener('scroll', animateOnScroll);
-            animateOnScroll(); // Run once on load
+            animateOnScroll();
         });
-        
-        // Update navigation based on login state
+    
         function updateNavigation() {
             const user = localStorage.getItem('currentUser');
-            
             if (user) {
                 loginNavItem.classList.add('hidden');
                 userNavItem.classList.remove('hidden');
@@ -888,78 +876,63 @@ for homepage:
                 userNavItem.classList.add('hidden');
             }
         }
-        
+    
         function checkLoggedIn() {
             const user = localStorage.getItem('currentUser');
-            
             if (user) {
                 currentUser = JSON.parse(user);
                 updateNavigation();
             }
         }
-        
+    
         function logout() {
             localStorage.removeItem('currentUser');
             currentUser = null;
             updateNavigation();
             window.location.href = 'home.html';
         }
-        
+    
         function scrollToProducts() {
-            document.getElementById('productsSection').scrollIntoView({ 
+            document.getElementById('productsSection').scrollIntoView({
                 behavior: 'smooth',
                 block: 'start'
             });
         }
-        
-        // Cart functions
+    
         function toggleCart() {
             cartSidebar.classList.toggle('open');
             cartOverlay.classList.toggle('active');
         }
-        
+    
         function closeCart() {
             cartSidebar.classList.remove('open');
             cartOverlay.classList.remove('active');
         }
-        
+    
         function addToCart(name, price) {
-            // Check if item already in cart
             const existingItem = cart.find(item => item.name === name);
-            
             if (existingItem) {
                 existingItem.quantity += 1;
             } else {
-                cart.push({
-                    name: name,
-                    price: price,
-                    quantity: 1
-                });
+                cart.push({ name, price, quantity: 1 });
             }
-            
             updateCart();
             toggleCart();
-            // Save cart to localStorage
             localStorage.setItem('cart', JSON.stringify(cart));
-            
-            // Animation for cart icon
+    
             const cartIcon = document.querySelector('.cart-icon');
             cartIcon.style.transform = 'scale(1.2)';
             setTimeout(() => {
                 cartIcon.style.transform = 'scale(1)';
             }, 300);
         }
-        
+    
         function updateCart() {
-            // Clear current items
             cartItems.innerHTML = '';
-            
             let total = 0;
-            
-            // Add each item to cart
+    
             cart.forEach(item => {
                 total += item.price * item.quantity;
-                
                 const itemElement = document.createElement('div');
                 itemElement.className = 'cart-item';
                 itemElement.innerHTML = `
@@ -972,55 +945,70 @@ for homepage:
                         <button class="quantity-btn" onclick="changeQuantity('${item.name}', 1)">+</button>
                     </div>
                 `;
-                
                 cartItems.appendChild(itemElement);
             });
-            
-            cartTotal.textContent = `Total: ₹${cart.reduce((sum, item) => sum + item.price * item.quantity, 0)}`;
-cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
-
-function changeQuantity(name, change) {
-    const item = cart.find(item => item.name === name);
-
-    if (item) {
-        item.quantity += change;
-
-        // Remove if quantity is 0 or less
-        if (item.quantity <= 0) {
-            cart = cart.filter(i => i.name !== name);
+    
+            cartTotal.textContent = `Total: ₹${total}`;
+            cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
         }
-
-        updateCart();
-        // Save cart to localStorage
-        localStorage.setItem('cart', JSON.stringify(cart));
-    }
-}
-
-function checkout() {
-    if (cart.length === 0) {
-        alert('Your cart is empty!');
-        return;
-    }
-
-    if (!currentUser) {
-        closeCart();
-        window.location.href = 'login.html'; // Changed 'auth.html' to 'login.html' as per your updated structure
-        return;
-    }
-
-    // In a real app, this would redirect to a checkout page
-    alert(`Checkout complete for ${currentUser.name}!\n\nTotal: ₹${cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)}\n\nThank you for your purchase!`);
-
-    // Clear cart
-    cart = [];
-    updateCart();
-    localStorage.removeItem('cart');
-    toggleCart();
-}
-
-// Close cart when clicking overlay 
-cartOverlay.addEventListener('click', toggleCart);
+    
+        function changeQuantity(name, change) {
+            const item = cart.find(item => item.name === name);
+            if (item) {
+                item.quantity += change;
+                if (item.quantity <= 0) {
+                    cart = cart.filter(i => i.name !== name);
+                }
+                updateCart();
+                localStorage.setItem('cart', JSON.stringify(cart));
+            }
         }
+    
+        async function checkout() {
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
+    
+            if (!currentUser) {
+                closeCart();
+                window.location.href = 'login.html';
+                return;
+            }
+    
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch('http://localhost:3001/api/orders', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        products: cart,
+                        totalAmount: cart.reduce((sum, item) => sum + item.price * item.quantity, 0),
+                        paymentMethod: "Cash on Delivery"
+                    })
+                });
+    
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Order failed!');
+                }
+    
+                const orderData = await response.json();
+                alert(`Order placed successfully!\nOrder ID: ${orderData._id}`);
+                cart = [];
+                updateCart();
+                localStorage.removeItem('cart');
+                toggleCart();
+            } catch (error) {
+                console.error('Checkout error:', error);
+                alert('Failed to place order. Please try again.');
+            }
+        }
+    
+        cartOverlay.addEventListener('click', toggleCart);
     </script>
 </body>
-</html>
+</html>    
