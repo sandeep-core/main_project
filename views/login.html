@@ -644,37 +644,49 @@
         // Login
         async function handleLogin(e) {
             e.preventDefault();
+
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-    
+
             if (!email || !password) {
                 return showAuthError('Please enter both email and password');
             }
-    
+
             try {
                 const res = await fetch('http://localhost:3001/api/users/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
                 });
-    
+
                 const data = await res.json();
+
+                console.log("🚀 Full response from backend:", data);
+
                 if (!res.ok) throw new Error(data.message);
-                
-                const { token, name, email: userEmail, _id, role } = data;
-                localStorage.setItem('token', data.token);
+
+                // ✅ Save user and token
                 localStorage.setItem('currentUser', JSON.stringify({
-                    name: data.name,
-                    email: data.email,
-                    role: data.role
+                    user: {
+                            name: data.name,
+                            email: data.email,
+                            role: data.role
+                        },
+                    token: data.token
                 }));
-    
+
+            
                 showAuthSuccess('Login successful! Redirecting...');
-                setTimeout(() => window.location.href = 'dashboard.html', 1500);
+                setTimeout(() => {
+                    window.location.href = 'home.html';
+                }, 1000);
+
             } catch (err) {
+                console.error("❌ Login error:", err.message);
                 showAuthError(err.message);
             }
-        }
+}
+
     </script>
     
 </body>

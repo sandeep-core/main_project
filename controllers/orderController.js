@@ -23,8 +23,13 @@ const createOrder = async (req, res) => {
   }
 };
 const getUserOrders = async (req, res) => {
-  const orders = await Order.find({ user: req.user._id });
-  res.json(orders);
+  try {
+    const userId = req.user._id;
+    const orders = await Order.find({ user: userId }).sort({ createdAt: -1 });
+    res.json(orders);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to fetch orders' });
+  }
 };
 module.exports = {
   createOrder,

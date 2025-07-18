@@ -445,6 +445,28 @@ for dashboard:
                 grid-template-columns: 1fr;
             }
         }
+
+        .order-history-item {
+            background: #f9f9f9;
+            border-left: 4px solid var(--primary-color);
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .order-history-item h4 {
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        .order-history-item p,
+        .order-history-item ul {
+            font-size: 0.95rem;
+            margin-bottom: 6px;
+        }
+
     </style>
 </head>
 <body>
@@ -523,9 +545,10 @@ for dashboard:
                     </div>
                     <h3>Order History</h3>
                     <p>View your past purchases and waste collection records</p>
-                    <button class="btn-dashboard warning" onclick="alert('Order history will be shown here')">
+                    <button class="btn-dashboard warning" onclick="showOrderHistory()">
                         <i class="fas fa-clock"></i> View History
                     </button>
+                    <div id="orderHistoryContainer" class="mt-4 space-y-4"></div>
                 </div>
                 
                 <div class="dashboard-card">
@@ -620,10 +643,27 @@ for dashboard:
         const wasteForm = document.getElementById('wasteForm');
         
         // Check if user is logged in on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            checkLoggedIn();
-        });
-        
+
+        document.addEventListener('DOMContentLoaded', () => {
+                try {
+                    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+                    if (!currentUser || !currentUser.token) {
+                        alert('Please log in first.');
+                        window.location.href = 'login.html';
+                        return;
+                    }
+
+                    // ✅ Set user name in welcome message
+                    document.getElementById('userName').innerText = currentUser.user.name;
+                    document.getElementById('navUsername').innerText = currentUser.user.name;
+                } catch (err) {
+                    console.error("Session error:", err.message);
+                    localStorage.removeItem('currentUser');
+                    alert('Session expired. Please log in again.');
+                    window.location.href = 'login.html';
+                }
+            });
         function checkLoggedIn() {
             const user = localStorage.getItem('currentUser');
             
@@ -669,6 +709,64 @@ for dashboard:
             document.getElementById('wasteProducerForm').reset();
             wasteForm.classList.add('hidden');
         }
+
+        //show history of order
+        async function showOrderHistory() {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const token = currentUser?.token;
+        const name = currentUser?.user?.name;
+
+        const container = document.getElementById('orderHistoryContainer');
+        container.innerHTML = ''; // Clear previous content
+
+        if (!token) {
+            container.innerHTML = '<p class="text-red-500">Please log in to view your order history.</p>';
+            return;
+        }
+
+        try {
+            const res = await fetch('http://localhost:3001/api/orders/my-orders', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            throw new Error(data.message || 'Unable to fetch orders');
+        }
+
+        if (data.length === 0) {
+            container.innerHTML = '<p>No past orders found.</p>';
+            return;
+        }
+
+        data.forEach(order => {
+            const orderDiv = document.createElement('div');
+            orderDiv.className = 'order-history-item';
+
+            const items = order.products.map(p => 
+                `<li>${p.name} - ₹${p.price} × ${p.quantity}</li>`
+            ).join('');
+
+            orderDiv.innerHTML = `
+                <h4 class="font-semibold text-lg">Order ID: ${order._id}</h4>
+                <p>Date: ${new Date(order.createdAt).toLocaleString()}</p>
+                <p>Total: ₹${order.totalAmount}</p>
+                <p>Payment Method: ${order.paymentMethod}</p>
+                <ul class="list-disc list-inside mt-2">${items}</ul>
+            `;
+
+            container.appendChild(orderDiv);
+        });
+        }
+        catch (err) {
+            console.error(err);
+            container.innerHTML = `<p class="text-red-500">Error: ${err.message}</p>`;
+        }
+    }
+
     </script>
 </body>
 </html>
