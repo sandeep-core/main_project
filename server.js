@@ -14,6 +14,8 @@ const orderRoutes = require('./routes/orders');
 const subscriptionRoutes = require('./routes/subscriptions');
 const paymentRoutes = require('./routes/payments');
 const adminRoutes = require('./routes/admin');
+const chatRoutes = require('./routes/chat');
+
 
 const app = express();
 
@@ -35,9 +37,11 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/subscriptions', subscriptionRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/admin', adminRoutes); // handles /admin/dashboard etc.
+app.use('/api/chat', chatRoutes);
 
 // Serve Static HTML Routes (views/home.html etc.)
 app.get('/', (req, res) => {
+  const { prompt } = req.body;
   res.sendFile(path.join(__dirname, 'views', 'home.html'));
 });
 
@@ -56,11 +60,11 @@ app.get('/admin', (req, res) => {
 });
 
 app.get('/admin-login', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'admin-login.html'));
+  res.sendFile(path.join(__dirname, 'views','admin', 'admin-login.html'));
 });
 
 app.get('/admin-dashboard', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'admin-dashboard.html'));
+  res.sendFile(path.join(__dirname, 'views','admin', 'admin-dashboard.html'));
 });
 
 // Error Handling

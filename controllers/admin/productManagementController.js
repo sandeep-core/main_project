@@ -23,8 +23,19 @@ const updateProductPrice = async (req, res) => {
 
   res.json({ message: 'Price updated', product });
 };
+// Get All Products
+const getAllProducts = async (req, res) => {
+  try {
+    const products = await Product.find();
+    res.json(products);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to fetch products' });
+  }
+};
+
 
 module.exports = {
   updateProductStock,
   updateProductPrice,
+  getAllProducts
 };

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Products - Waste2Wing</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f9fff9;
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            color: var(--secondary-color);
+            transition: var(--transition);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            bottom: -4px;
+            left: 0;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #2e8b57;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f0fff0;
+    }
+
+    tr:hover {
+      background-color: #f6f6f6;
+    }
+
+    input[type="number"] {
+      width: 80px;
+    }
+
+    button {
+      background-color: #2e8b57;
+      border: none;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #256d45;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+        <div class="logo">
+            <i class="fas fa-recycle"></i> Waste2Wings
+        </div>
+        <ul class="nav-links">
+            <li><a href="admin-dashboard.html">Dashboard</a></li>
+            <li><a href="admin-order.html" id="ordersLink">Orders</a></li>
+            <li><a href="admin-products.html" id="productsLink">Products</a></li>
+            <li><a href="admin-users.html" id="usersLink">Users</a></li>
+        </ul>
+    </div>
+</nav>
+<br><br><br>
+  <div class="container">
+    <h2>Manage Products</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Price (₹)</th>
+          <th>Stock</th>
+          <th>Update</th>
+        </tr>
+      </thead>
+      <tbody id="productsTableBody">
+        <!-- Products will be listed here -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const adminUser = JSON.parse(localStorage.getItem('adminUser'));
+      if (!adminUser || !adminUser.token || adminUser.role !== 'admin') {
+        window.location.href = 'admin-login.html';
+        return;
+      }
+
+      try {
+        const res = await fetch('/admin/products', {
+          headers: { 'Authorization': `Bearer ${adminUser.token}` }
+        });
+
+        const products = await res.json();
+        const tbody = document.getElementById('productsTableBody');
+        tbody.innerHTML = '';
+
+        products.forEach(p => {
+          tbody.innerHTML += `
+            <tr>
+              <td>${p.name}</td>
+              <td>
+                <input type="number" value="${p.price}" id="price-${p._id}" />
+              </td>
+              <td>
+                <input type="number" value="${p.stock}" id="stock-${p._id}" />
+              </td>
+              <td>
+                <button onclick="updatePrice('${p._id}')">Update Price</button>
+                <button onclick="updateStock('${p._id}')">Update Stock</button>
+              </td>
+            </tr>`;
+        });
+
+      } catch (err) {
+        alert('Failed to load products');
+      }
+    });
+
+    async function updatePrice(id) {
+      const value = document.getElementById(`price-${id}`).value;
+      const adminUser = JSON.parse(localStorage.getItem('adminUser'));
+
+      try {
+        await fetch(`/admin/products/${id}/price`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${adminUser.token}`
+          },
+          body: JSON.stringify({ price: value })
+        });
+        alert('Price updated');
+      } catch {
+        alert('Failed to update price');
+      }
+    }
+
+    async function updateStock(id) {
+      const value = document.getElementById(`stock-${id}`).value;
+      const adminUser = JSON.parse(localStorage.getItem('adminUser'));
+
+      try {
+        await fetch(`/admin/products/${id}/stock`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${adminUser.token}`
+          },
+          body: JSON.stringify({ stock: value })
+        });
+        alert('Stock updated');
+      } catch {
+        alert('Failed to update stock');
+      }
+    }
+  </script>
+</body>
+</html>

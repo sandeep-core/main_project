@@ -1,5 +1,3 @@
-for homepage:
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,11 +5,9 @@ for homepage:
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Waste to Wings - Smart Waste Tech & BSF Farming</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <link rel="stylesheet" href="css/home.css">
 </head>
 <body>
-    <!-- Navigation -->
     <nav class="navbar" id="navbar">
         <div class="nav-container">
             <div class="logo">
@@ -20,6 +16,8 @@ for homepage:
             <ul class="nav-links">
                 <li><a href="home.html">Home</a></li>
                 <li><a href="#" onclick="scrollToProducts()">Products</a></li>
+                <li><a href="#" onclick="scrollToAbout()">About Us</a></li>
+                <li><a href="#" onclick="scrollToContact()">Contact Us</a></li>
                 <li id="loginNavItem"><a href="login.html">Login</a></li>
                 <li id="userNavItem" class="hidden">
                     <div class="user-dropdown">
@@ -44,23 +42,39 @@ for homepage:
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- Chat Toggle Button -->
+    <div id="chat-toggle" onclick="toggleChat()">💬</div>
+
+    <!-- Chat Container -->
+    <div id="chat-container">
+    <div class="chat-header">
+        Waste2Wing Assistant
+        <span onclick="toggleChat()">✖</span>
+    </div>
+    <div class="chat-messages" id="chat-messages"></div>
+    <div class="chat-input">
+        <input type="text" id="chat-input" placeholder="Ask about BSF, waste, etc..." onkeydown="handleKey(event)">
+        <button onclick="sendMessage()">➤</button>
+    </div>
+    </div>
+
+
+
     <section class="hero">
         <div class="hero-content">
             <h1>Waste to Wings</h1>
-            <p>Converting  Waste into new product using new Technology</p>
+            <p>Converting Waste into new product using new Technology</p>
             <div class="hero-buttons">
                 <button class="btn btn-primary" onclick="scrollToProducts()">
                     <i class="fas fa-shopping-bag"></i> Shop Products
                 </button>
                 <a href="login.html" class="btn btn-secondary">
-                    <i class="fas fa-user-cog"></i> Login Portal
+                    <i class="fas fa-user-cog"></i> Dashboard
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- Products Section -->
     <section class="products" id="productsSection">
         <div class="container">
             <h2 class="section-title">Premium Insect Protein Products</h2>
@@ -116,7 +130,6 @@ for homepage:
         </div>
     </section>
 
-    <!-- Features Section -->
     <section class="features">
         <div class="container">
             <h2 class="section-title">Why Choose Waste to Wings?</h2>
@@ -156,7 +169,43 @@ for homepage:
         </div>
     </section>
 
-    <!-- Cart Sidebar -->
+    <section class="about-us" id="aboutUsSection">
+        <div class="container">
+            <h2 class="section-title">The Power of BSF Farming</h2>
+            <div class="about-us-content">
+                <div class="about-us-icon-container">
+                    <i class="fas fa-recycle"></i>
+                </div>
+                <div class="about-us-text">
+                    <h3>Nature's Ultimate Recyclers</h3>
+                    <p>At the heart of Waste to Wings is the incredible Black Soldier Fly (BSF). These remarkable insects are nature's most efficient decomposers. Their larvae have a voracious appetite for organic waste, capable of consuming twice their body weight every single day.</p>
+                    <p>This natural process allows us to tackle the growing problem of food waste head-on. Instead of ending up in landfills, organic waste becomes the fuel for a new, sustainable resource. It's a perfect example of a circular economy in action, turning a problem into a valuable solution for our planet.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer" id="contactUsSection">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <p>Have questions about our products or our process? We'd love to hear from you. Reach out to us through any of the channels below.</p>
+            <div class="contact-info">
+                <span><i class="fas fa-map-marker-alt"></i> Mathura, Uttar Pradesh, India</span>
+                <span><i class="fas fa-phone"></i> +91 7307412920</span>
+                <span><i class="fas fa-envelope"></i> contact@wastetowings.com</span>
+            </div>
+            <div class="social-links">
+                <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            </div>
+            <div class="footer-bottom">
+                &copy; 2025 Waste to Wings | All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
     <div class="cart-overlay" id="cartOverlay"></div>
     <div class="cart-sidebar" id="cartSidebar">
         <div class="cart-header">
@@ -166,14 +215,21 @@ for homepage:
             </button>
         </div>
         <div class="cart-items" id="cartItems">
-            <!-- Cart items will be added here dynamically -->
-        </div>
+            </div>
         <div class="cart-total">
             <div class="total-amount" id="cartTotal">Total: ₹0</div>
-            <button class="fas fa-cart-plus" onclick="checkout()">Cash On Delivery</button>
-            <button class="fas fa-cart-plus" onclick="checkoutCart()">Pay Now</button>
+            <button class="checkout-btn" onclick="checkout()">
+                <i class="fas fa-credit-card"></i> Cash on Delivery
+            </button>
+            <hr><hr><hr>
+            <button class="checkout-btn" onclick="checkoutCart()">
+                <i class="fas fa-credit-card"></i> Pay Now
+            </button>
         </div>
     </div>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://js.puter.com/v2/"></script>
 
     <script>
         let currentUser = null;
@@ -186,6 +242,7 @@ for homepage:
         const cartCount = document.getElementById('cartCount');
         const loginNavItem = document.getElementById('loginNavItem');
         const userNavItem = document.getElementById('userNavItem');
+        const adminNavItem = document.getElementById('adminNavItem');
         const navUsername = document.getElementById('navUsername');
     
         document.addEventListener('DOMContentLoaded', function () {
@@ -198,7 +255,7 @@ for homepage:
             }
     
             const animateOnScroll = () => {
-                const elements = document.querySelectorAll('.product-card, .feature-card');
+                const elements = document.querySelectorAll('.product-card, .feature-card, .about-us-content');
                 elements.forEach(element => {
                     const elementPosition = element.getBoundingClientRect().top;
                     const screenPosition = window.innerHeight / 1.2;
@@ -209,7 +266,7 @@ for homepage:
                 });
             };
     
-            document.querySelectorAll('.product-card, .feature-card').forEach(el => {
+            document.querySelectorAll('.product-card, .feature-card, .about-us-content').forEach(el => {
                 el.style.opacity = '0';
                 el.style.transform = 'translateY(20px)';
                 el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
@@ -221,27 +278,39 @@ for homepage:
     
         function updateNavigation() {
             const user = localStorage.getItem('currentUser');
+            const admin = localStorage.getItem('adminUser');
+            
             if (user) {
                 loginNavItem.classList.add('hidden');
                 userNavItem.classList.remove('hidden');
+                adminNavItem.classList.add('hidden');
                 currentUser = JSON.parse(user);
+                navUsername.textContent = currentUser.user.name;
+            } else if (admin) {
+                loginNavItem.classList.add('hidden');
+                userNavItem.classList.add('hidden');
+                adminNavItem.classList.remove('hidden');
+                currentUser = JSON.parse(admin);
                 navUsername.textContent = currentUser.name;
             } else {
                 loginNavItem.classList.remove('hidden');
                 userNavItem.classList.add('hidden');
+                adminNavItem.classList.add('hidden');
             }
         }
     
         function checkLoggedIn() {
             const user = localStorage.getItem('currentUser');
-            if (user) {
-                currentUser = JSON.parse(user);
+            const admin = localStorage.getItem('adminUser');
+            
+            if (user || admin) {
                 updateNavigation();
             }
         }
     
         function logout() {
             localStorage.removeItem('currentUser');
+            localStorage.removeItem('adminUser');
             currentUser = null;
             updateNavigation();
             window.location.href = 'home.html';
@@ -249,6 +318,20 @@ for homepage:
     
         function scrollToProducts() {
             document.getElementById('productsSection').scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+        
+        function scrollToAbout() {
+            document.getElementById('aboutUsSection').scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+        
+        function scrollToContact() {
+            document.getElementById('contactUsSection').scrollIntoView({
                 behavior: 'smooth',
                 block: 'start'
             });
@@ -398,7 +481,7 @@ for homepage:
                 alert("Checkout failed. Please try again.");
             }
         }
-        
+
         async function checkout() {
             if (cart.length === 0) {
                 alert('Your cart is empty!');
@@ -412,7 +495,7 @@ for homepage:
             }
     
             try {
-                const token = localStorage.getItem('token');
+                const token = currentUser.token || currentUser.user?.token;
                 const response = await fetch('http://localhost:3001/api/orders', {
                     method: 'POST',
                     headers: {
@@ -442,7 +525,69 @@ for homepage:
                 alert('Failed to place order. Please try again.');
             }
         }
+
+        function toggleChat() {
+                const chat = document.getElementById('chat-container');
+                chat.style.display = chat.style.display === 'flex' ? 'none' : 'flex';
+                if (chat.style.display === 'flex') chat.style.flexDirection = 'column';
+            }
+
+            function handleKey(e) {
+                if (e.key === 'Enter') sendMessage();
+            }
+
+            function appendMessage(sender, text) {
+                const container = document.getElementById('chat-messages');
+                const msg = document.createElement('div');
+                msg.style.margin = "5px 0";
+                msg.style.textAlign = sender === "user" ? "right" : "left";
+                msg.style.color = sender === "user" ? "#2e8b57" : "#333";
+                msg.textContent = text;
+                container.appendChild(msg);
+                container.scrollTop = container.scrollHeight;
+            }
+            function toggleChat() {
+    const container = document.getElementById('chat-container');
+    container.style.display = container.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    function handleKey(e) {
+    if (e.key === 'Enter') sendMessage();
+    }
+
+    function appendMessage(sender, text) {
+    const messages = document.getElementById('chat-messages');
+    const div = document.createElement('div');
+    div.className = 'chat-message ' + sender;
+    div.textContent = text;
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+    }
+
+    async function sendMessage() {
+    const input = document.getElementById('chat-input');
+    const message = input.value.trim();
+    if (!message) return;
+
+    appendMessage('user', message);
+    input.value = '';
+
+    try {
+        const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: message })
+        });
+
+        const data = await res.json();
+        appendMessage('bot', data.reply);
+    } catch (err) {
+        appendMessage('bot', 'Server error. Try again.');
+    }
+    }
+
+                
         cartOverlay.addEventListener('click', toggleCart);
     </script>
 </body>
-</html>    
+</html>
