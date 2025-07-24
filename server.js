@@ -60,11 +60,11 @@ app.get('/admin', (req, res) => {
 });
 
 app.get('/admin-login', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views','admin', 'admin-login.html'));
+  res.sendFile(path.join(__dirname, 'views', 'admin-login.html'));
 });
 
 app.get('/admin-dashboard', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views','admin', 'admin-dashboard.html'));
+  res.sendFile(path.join(__dirname, 'views', 'admin-dashboard.html'));
 });
 
 // Error Handling

@@ -1,12 +1,7 @@
-
 const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   products: [
     {
       name: String,
@@ -14,19 +9,21 @@ const orderSchema = new mongoose.Schema({
       quantity: Number
     }
   ],
-  totalAmount: {
-    type: Number,
-    required: true,
-  },
+  totalAmount: Number,
   paymentMethod: {
     type: String,
-    required: true,
-    enum: ['Cash on Delivery', 'Online Payment']
+    enum: ['Cash on Delivery', 'Razorpay'],
+    required: true
   },
-  createdAt : {
-    type: Date,
-    default: Date.now,
-  }}
-);
+  razorpayPaymentId: String,
+  razorpayOrderId: String,
+  status: {
+    type: String,
+    enum: ['Pending', 'Paid'],
+    default: function () {
+      return this.paymentMethod === 'Razorpay' ? 'Paid' : 'Pending';
+    }
+  }
+}, { timestamps: true });
 
 module.exports = mongoose.model('Order', orderSchema);

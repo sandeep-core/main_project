@@ -1,0 +1,130 @@
+/* CSS for contact.html */
+
+.contact-page {
+    padding: 150px 0 100px; /* Add padding to account for fixed navbar */
+    background: var(--light-color);
+}
+
+.contact-subtitle {
+    text-align: center;
+    max-width: 700px;
+    margin: -2rem auto 4rem auto;
+    font-size: 1.1rem;
+    color: #555;
+}
+
+.contact-content-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 3rem;
+    align-items: flex-start;
+}
+
+.contact-form-container,
+.contact-details-container {
+    background: #ffffff;
+    padding: 2.5rem;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+}
+
+.contact-form-container h3,
+.contact-details-container h3 {
+    font-size: 1.8rem;
+    color: var(--dark-color);
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: var(--transition);
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(46, 139, 87, 0.2);
+}
+
+.contact-details-container p {
+    color: #555;
+    margin-bottom: 2rem;
+    line-height: 1.7;
+}
+
+.contact-info-block {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1rem;
+}
+
+.info-item i {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    width: 25px; /* Aligns icons neatly */
+    text-align: center;
+}
+
+.social-links-contact {
+    display: flex;
+    gap: 1rem;
+}
+
+.social-links-contact a {
+    background-color: var(--light-color);
+    color: var(--primary-color);
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    text-decoration: none;
+    font-size: 1.2rem;
+    transition: var(--transition);
+}
+
+.social-links-contact a:hover {
+    background-color: var(--primary-color);
+    color: var(--text-light);
+    transform: translateY(-3px);
+}
+
+/* Responsive Styles */
+@media (max-width: 992px) {
+    .contact-content-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .contact-page {
+        padding: 120px 0 60px;
+    }
+}

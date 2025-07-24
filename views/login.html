@@ -150,15 +150,10 @@
             }
         }
     
-        // On page load
         document.addEventListener('DOMContentLoaded', () => {
-            const user = localStorage.getItem('currentUser');
-            if (user) {
-                currentUser = JSON.parse(user);
-                updateNavigation();
-                window.location.href = 'dashboard.html';
-            }
+            updateNavigation(); // Only update nav
         });
+
     
         function logout() {
             localStorage.removeItem('currentUser');
@@ -288,7 +283,7 @@
             
                 showAuthSuccess('Login successful! Redirecting...');
                 setTimeout(() => {
-                    window.location.href = 'home.html';
+                    window.location.href = 'dashboard.html';
                 }, 1000);
 
             } catch (err) {

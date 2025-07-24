@@ -1,3 +1,5 @@
+for home
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,9 +17,9 @@
             </div>
             <ul class="nav-links">
                 <li><a href="home.html">Home</a></li>
-                <li><a href="#" onclick="scrollToProducts()">Products</a></li>
-                <li><a href="#" onclick="scrollToAbout()">About Us</a></li>
-                <li><a href="#" onclick="scrollToContact()">Contact Us</a></li>
+                <li><a href="#productsSection" onclick="scrollToProducts(event)">Products</a></li>
+                <li><a href="#aboutUsSection" onclick="scrollToAbout(event)">About Us</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
                 <li id="loginNavItem"><a href="login.html">Login</a></li>
                 <li id="userNavItem" class="hidden">
                     <div class="user-dropdown">
@@ -42,23 +44,19 @@
         </div>
     </nav>
 
-    <!-- Chat Toggle Button -->
     <div id="chat-toggle" onclick="toggleChat()">💬</div>
 
-    <!-- Chat Container -->
     <div id="chat-container">
-    <div class="chat-header">
-        Waste2Wing Assistant
-        <span onclick="toggleChat()">✖</span>
+        <div class="chat-header">
+            Waste2Wing Assistant
+            <span onclick="toggleChat()">✖</span>
+        </div>
+        <div class="chat-messages" id="chat-messages"></div>
+        <div class="chat-input">
+            <input type="text" id="chat-input" placeholder="Ask about BSF, waste, etc..." onkeydown="handleKey(event)">
+            <button onclick="sendMessage()">➤</button>
+        </div>
     </div>
-    <div class="chat-messages" id="chat-messages"></div>
-    <div class="chat-input">
-        <input type="text" id="chat-input" placeholder="Ask about BSF, waste, etc..." onkeydown="handleKey(event)">
-        <button onclick="sendMessage()">➤</button>
-    </div>
-    </div>
-
-
 
     <section class="hero">
         <div class="hero-content">
@@ -68,7 +66,7 @@
                 <button class="btn btn-primary" onclick="scrollToProducts()">
                     <i class="fas fa-shopping-bag"></i> Shop Products
                 </button>
-                <a href="login.html" class="btn btn-secondary">
+                <a href="dashboard.html" class="btn btn-secondary">
                     <i class="fas fa-user-cog"></i> Dashboard
                 </a>
             </div>
@@ -187,13 +185,10 @@
 
     <footer class="footer" id="contactUsSection">
         <div class="container">
-            <h2 class="section-title">Get In Touch</h2>
-            <p>Have questions about our products or our process? We'd love to hear from you. Reach out to us through any of the channels below.</p>
-            <div class="contact-info">
-                <span><i class="fas fa-map-marker-alt"></i> Mathura, Uttar Pradesh, India</span>
-                <span><i class="fas fa-phone"></i> +91 7307412920</span>
-                <span><i class="fas fa-envelope"></i> contact@wastetowings.com</span>
+            <div>
+                <h2>Transforming Waste. Empowering Agriculture. Building a Greener Tomorrow.</h2>
             </div>
+            
             <div class="social-links">
                 <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
                 <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
@@ -215,7 +210,7 @@
             </button>
         </div>
         <div class="cart-items" id="cartItems">
-            </div>
+        </div>
         <div class="cart-total">
             <div class="total-amount" id="cartTotal">Total: ₹0</div>
             <button class="checkout-btn" onclick="checkout()">
@@ -227,6 +222,10 @@
             </button>
         </div>
     </div>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://js.puter.com/v2/"></script>
+
 
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="https://js.puter.com/v2/"></script>

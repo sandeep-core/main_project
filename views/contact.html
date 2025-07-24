@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Waste to Wings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/contact.css">
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-recycle"></i> Waste to Wings
+            </div>
+            <ul class="nav-links">
+                <li><a href="home.html">Home</a></li>
+                <li><a href="home.html#productsSection">Products</a></li>
+                <li><a href="home.html#aboutUsSection">About Us</a></li>
+                
+                <li id="loginNavItem"><a href="login.html">Login</a></li>
+                <li id="userNavItem" class="hidden">
+                    <div class="user-dropdown">
+                        <button class="user-dropdown-btn" id="userDropdownBtn">
+                            <i class="fas fa-user-circle"></i>
+                            <span id="navUsername"></span>
+                            <i class="fas fa-caret-down"></i>
+                        </button>
+                        <div class="user-dropdown-content">
+                            <a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                            <a href="login.html" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="cart-icon" onclick="toggleCart()">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="contact-page">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <p class="contact-subtitle">We're here to help and answer any question you might have. We look forward to hearing from you.</p>
+
+            <div class="contact-content-grid">
+                <div class="contact-form-container">
+                    <h3>Send Us a Message</h3>
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Your Name</label>
+                            <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Your Email</label>
+                            <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <input type="text" id="subject" name="subject" placeholder="What is this about?" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" rows="6" placeholder="Write your message here..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-secondary">
+                            <i class="fas fa-paper-plane"></i> Send Message
+                        </button>
+                    </form>
+                </div>
+
+                <div class="contact-details-container">
+                    <h3>Contact Information</h3>
+                    <p>Reach out to us directly through our contact details or find us on social media.</p>
+                    <div class="contact-info-block">
+                        <div class="info-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Mathura, Uttar Pradesh, India</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-phone"></i>
+                            <span>+91 7307412920</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>contact@wastetowings.com</span>
+                        </div>
+                    </div>
+                    <h3>Follow Us</h3>
+                    <div class="social-links-contact">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer class="footer">
+        <div class="container">
+           &copy; 2025 Waste to Wings | All Rights Reserved.
+            
+        </div>
+    </footer>
+
+    <div class="cart-overlay" id="cartOverlay"></div>
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3>Your Cart</h3>
+            <button class="close-cart" onclick="toggleCart()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="cart-items" id="cartItems"></div>
+        <div class="cart-total">
+            <div class="total-amount" id="cartTotal">Total: ₹0</div>
+            <button class="checkout-btn" onclick="checkout()"><i class="fas fa-credit-card"></i> Cash on Delivery</button>
+            <hr><hr><hr>
+            <button class="checkout-btn" onclick="checkoutCart()"><i class="fas fa-credit-card"></i> Pay Now</button>
+        </div>
+    </div>
+    
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://js.puter.com/v2/"></script>
+    <script>
+        // I will paste the code here for completion.
+
+        let currentUser = null;
+        let cart = [];
+    
+        const cartSidebar = document.getElementById('cartSidebar');
+        const cartOverlay = document.getElementById('cartOverlay');
+        const cartItems = document.getElementById('cartItems');
+        const cartTotal = document.getElementById('cartTotal');
+        const cartCount = document.getElementById('cartCount');
+        const loginNavItem = document.getElementById('loginNavItem');
+        const userNavItem = document.getElementById('userNavItem');
+        const navUsername = document.getElementById('navUsername');
+    
+        document.addEventListener('DOMContentLoaded', function () {
+            checkLoggedIn();
+    
+            const savedCart = localStorage.getItem('cart');
+            if (savedCart) {
+                cart = JSON.parse(savedCart);
+                updateCart();
+            }
+        });
+    
+        function updateNavigation() {
+            const user = localStorage.getItem('currentUser');
+            if (user) {
+                loginNavItem.classList.add('hidden');
+                userNavItem.classList.remove('hidden');
+                currentUser = JSON.parse(user);
+                navUsername.textContent = currentUser.user.name;
+            } else {
+                loginNavItem.classList.remove('hidden');
+                userNavItem.classList.add('hidden');
+            }
+        }
+    
+        function checkLoggedIn() {
+            const user = localStorage.getItem('currentUser');
+            if (user) {
+                updateNavigation();
+            }
+        }
+    
+        function logout() {
+            localStorage.removeItem('currentUser');
+            currentUser = null;
+            updateNavigation();
+            window.location.href = 'home.html';
+        }
+    
+        function toggleCart() {
+            cartSidebar.classList.toggle('open');
+            cartOverlay.classList.toggle('active');
+        }
+
+        function updateCart() {
+            cartItems.innerHTML = '';
+            let total = 0;
+    
+            cart.forEach(item => {
+                total += item.price * item.quantity;
+                const itemElement = document.createElement('div');
+                itemElement.className = 'cart-item';
+                itemElement.innerHTML = `
+                    <div class="cart-item-info">
+                        <h4>${item.name}</h4>
+                        <div class="cart-item-price">₹${item.price} x ${item.quantity}</div>
+                    </div>
+                    <div class="quantity-controls">
+                        <button class="quantity-btn" onclick="changeQuantity('${item.name}', -1)">-</button>
+                        <button class="quantity-btn" onclick="changeQuantity('${item.name}', 1)">+</button>
+                    </div>
+                `;
+                cartItems.appendChild(itemElement);
+            });
+    
+            cartTotal.textContent = Total: ₹${total};
+            cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+        }
+    
+        function changeQuantity(name, change) {
+            const item = cart.find(item => item.name === name);
+            if (item) {
+                item.quantity += change;
+                if (item.quantity <= 0) {
+                    cart = cart.filter(i => i.name !== name);
+                }
+                updateCart();
+                localStorage.setItem('cart', JSON.stringify(cart));
+            }
+        }
+        
+        // Add event listener for form submission
+        document.getElementById('contactForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Here you would typically send the form data to a server
+            alert('Thank you for your message! We will get back to you soon.');
+            this.reset();
+        });
+
+        // Add other functions like checkoutCart, addToCart etc. from your original file
+        // ... (The rest of your JavaScript functions) ...
+
+        cartOverlay.addEventListener('click', toggleCart);
+    </script>
+        
+</body>
+</html>

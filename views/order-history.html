@@ -1,0 +1,829 @@
+here it is 
+
+order-history.html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waste to Wings - Order History</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* --- Basic Setup --- */
+        :root {
+            --primary-color: #2e8b57;
+            --secondary-color: #3cb371;
+            --accent-color: #8fbc8f;
+            --dark-color: #1a3a1a;
+            --light-color: #f0fff0;
+            --text-color: #333;
+            --text-light: #fff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease-in-out;
+            --sidebar-width: 250px;
+            --warning-color: #ffa500;
+            --success-color: #2e8b57;
+            --info-color: #1e90ff;
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+
+        body {
+            font-family: 'Poppins', 'Arial', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--light-color);
+        }
+
+        /* Enhanced Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: linear-gradient(180deg, 
+                rgba(26, 58, 26, 0.95) 0%, 
+                rgba(46, 139, 87, 0.95) 50%, 
+                rgba(60, 179, 113, 0.95) 100%);
+            backdrop-filter: blur(15px);
+            padding: 1.5rem 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 1100;
+            box-shadow: 8px 0 25px rgba(0,0,0,0.15);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            overflow-y: auto;
+        }
+
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, 
+                rgba(60, 179, 113, 0.2) 0%, 
+                transparent 70%);
+            pointer-events: none;
+        }
+
+        /* Enhanced Logo */
+        .sidebar-logo {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 2.5rem;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-shadow: 0 0 15px rgba(60, 179, 113, 0.8);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar-logo::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.1), 
+                transparent);
+            transition: transform 0.6s;
+            transform: rotate(45deg) translate(-100%, -100%);
+        }
+
+        .sidebar-logo:hover::before {
+            transform: rotate(45deg) translate(100%, 100%);
+        }
+
+        .sidebar-logo i {
+            font-size: 2rem;
+            transition: all 0.5s ease-in-out;
+            filter: drop-shadow(0 0 8px rgba(60, 179, 113, 0.6));
+        }
+
+        .sidebar-logo:hover i {
+            transform: rotate(360deg) scale(1.1);
+            filter: drop-shadow(0 0 12px rgba(60, 179, 113, 1));
+        }
+
+        .sidebar-logo:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(60, 179, 113, 0.4);
+            text-shadow: 0 0 20px rgba(60, 179, 113, 1);
+        }
+
+        /* Enhanced Navigation */
+        .sidebar-nav {
+            list-style: none;
+            width: 100%;
+            padding: 0 1rem;
+            flex-grow: 1;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        .sidebar-nav li a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            border-radius: 12px;
+            transition: var(--transition);
+            font-weight: 500;
+            gap: 15px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(5px);
+            border: 1px solid transparent;
+        }
+
+        .sidebar-nav li a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.1), 
+                transparent);
+            transition: left 0.5s;
+        }
+
+        .sidebar-nav li a:hover::before {
+            left: 100%;
+        }
+
+        .sidebar-nav li a i {
+            font-size: 1.2rem;
+            width: 20px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .sidebar-nav li a .link-text {
+            flex-grow: 1;
+            transition: var(--transition);
+        }
+
+        .sidebar-nav li a:hover, 
+        .sidebar-nav li a.active {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateX(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            color: #ffffff;
+        }
+
+        .sidebar-nav li a:hover i, 
+        .sidebar-nav li a.active i {
+            transform: scale(1.2);
+            color: #a8e6cf;
+            text-shadow: 0 0 10px rgba(168, 230, 207, 0.5);
+        }
+
+        .sidebar-nav li a.active {
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.2), 
+                rgba(255, 255, 255, 0.1));
+            border-left: 4px solid #a8e6cf;
+            box-shadow: 0 8px 25px rgba(168, 230, 207, 0.2);
+        }
+
+        /* Enhanced Cart Icon */
+        .cart-icon-sidebar {
+            position: relative;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: linear-gradient(135deg, #ff7675, #fd79a8);
+            color: white;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 8px rgba(255, 118, 117, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* Admin Link Enhancement */
+        .admin-link {
+            color: #ff7675 !important;
+            font-weight: 600;
+            background: rgba(255, 118, 117, 0.1) !important;
+            border: 1px solid rgba(255, 118, 117, 0.3) !important;
+        }
+
+        .admin-link:hover {
+            color: #ffffff !important;
+            background: rgba(255, 118, 117, 0.2) !important;
+            border: 1px solid rgba(255, 118, 117, 0.5) !important;
+            box-shadow: 0 8px 20px rgba(255, 118, 117, 0.3);
+        }
+
+        .admin-link i {
+            color: #ff7675;
+        }
+
+        .admin-link:hover i {
+            color: #ffffff !important;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Sidebar Footer */
+        .sidebar-footer {
+            padding: 1rem;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: auto;
+        }
+
+        .sidebar-footer p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.8rem;
+            margin: 0;
+        }
+
+        /* Scrollbar for sidebar */
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Main Content & Navbar */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding-top: 80px;
+            width: calc(100% - var(--sidebar-width));
+            transition: var(--transition);
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            width: calc(100% - var(--sidebar-width));
+            left: var(--sidebar-width);
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .user-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .user-dropdown-btn {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+
+        .user-dropdown-btn:hover {
+            color: var(--primary-color);
+        }
+
+        .user-dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background: white;
+            min-width: 160px;
+            box-shadow: var(--shadow);
+            border-radius: 8px;
+            z-index: 1;
+            padding: 10px 0;
+            transition: var(--transition);
+        }
+
+        .user-dropdown-content a {
+            color: var(--text-color);
+            padding: 8px 16px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: var(--transition);
+        }
+
+        .user-dropdown-content a:hover {
+            background: #f5f5f5;
+            color: var(--primary-color);
+            padding-left: 20px;
+        }
+
+        .user-dropdown:hover .user-dropdown-content {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Order History Styles */
+        .page-container {
+            padding: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .page-header .subtitle {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 2.5rem;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 1rem;
+        }
+
+        #orderTimeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        /* The timeline vertical line */
+        #orderTimeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, var(--primary-color), var(--secondary-color));
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding-left: 50px;
+        }
+
+        /* The dot on the timeline */
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 5px;
+            width: 22px;
+            height: 22px;
+            background-color: var(--light-color);
+            border: 4px solid var(--primary-color);
+            border-radius: 50%;
+            z-index: 1;
+            box-shadow: 0 4px 8px rgba(46, 139, 87, 0.3);
+        }
+
+        .order-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            overflow: hidden;
+            border: 1px solid rgba(46, 139, 87, 0.1);
+        }
+
+        .order-card:hover {
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 15px 30px rgba(46, 139, 87, 0.2);
+        }
+        
+        .order-card-header {
+            background: linear-gradient(135deg, #f9f9f9, #f0fff0);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .order-card-header h4 {
+            font-size: 1.1rem;
+            color: var(--dark-color);
+            margin: 0;
+            word-break: break-all;
+        }
+
+        .order-card-header .order-date {
+            font-size: 0.9rem;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .order-status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: white;
+            text-transform: uppercase;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .status-processing { 
+            background: linear-gradient(135deg, var(--warning-color), #ffb347);
+        }
+        .status-shipped { 
+            background: linear-gradient(135deg, var(--info-color), #87ceeb);
+        }
+        .status-delivered { 
+            background: linear-gradient(135deg, var(--success-color), var(--secondary-color));
+        }
+
+        .order-card-body {
+            padding: 20px;
+        }
+
+        .order-card-body p { 
+            margin-bottom: 10px; 
+            color: var(--dark-color);
+            font-weight: 500;
+        }
+
+        .order-card-body ul {
+            list-style: none;
+            padding-left: 0;
+            margin-top: 10px;
+        }
+
+        .order-card-body li {
+            padding: 8px 0;
+            border-bottom: 1px dashed #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .order-card-body li:last-child { 
+            border-bottom: none; 
+        }
+
+        .order-card-footer {
+            padding: 15px 20px;
+            background: linear-gradient(135deg, #fdfdfd, #f8fff8);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .order-total {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .order-actions .btn {
+            text-decoration: none;
+            color: var(--primary-color);
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: var(--transition);
+            margin-left: 10px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .order-actions .btn:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 139, 87, 0.3);
+        }
+
+        .order-actions .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .order-actions .btn-primary:hover {
+            background: linear-gradient(135deg, var(--dark-color), var(--primary-color));
+        }
+
+        .loading-text, .error-text, .empty-text {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #777;
+            padding: 40px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            margin: 20px 0;
+        }
+
+        .empty-text {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .error-text {
+            color: #e74c3c;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            :root { 
+                --sidebar-width: 0; 
+            }
+            
+            .sidebar { 
+                transform: translateX(-100%);
+                transition: transform 0.3s ease-in-out;
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .main-content, .navbar { 
+                width: 100%; 
+                margin-left: 0; 
+                left: 0; 
+            }
+            
+            #orderTimeline::before { 
+                left: 10px; 
+            }
+            
+            .timeline-item { 
+                padding-left: 40px; 
+            }
+            
+            .timeline-item::before { 
+                left: 0px; 
+            }
+        }
+
+        @media (max-width: 768px) {
+            .order-card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .order-card-footer {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .order-actions {
+                width: 100%;
+            }
+            
+            .order-actions .btn {
+                margin: 0 5px 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <i class="fas fa-recycle"></i> Waste 2 Wings
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="dashboard.html"><i class="fas fa-tachometer-alt fa-fw"></i> <span class="link-text">Dashboard</span></a></li>
+            <li><a href="home.html#productsection"><i class="fas fa-shopping-bag fa-fw"></i> <span class="link-text">Products</span></a></li>
+            <li><a href="order-history.html" class="active"><i class="fas fa-history fa-fw"></i> <span class="link-text">Order History</span></a></li>
+            <li id="adminSidebarNavItem" class="hidden"><a href="admin-panel.html" class="admin-link"><i class="fas fa-lock fa-fw"></i> <span class="link-text">Admin Panel</span></a></li>
+            <li>
+                <a href="#" onclick="toggleCart()" class="cart-icon-sidebar">
+                    <i class="fas fa-shopping-cart fa-fw"></i>
+                    <span class="link-text">Cart</span>
+                    <span class="cart-count" id="cartCount">0</span>
+                </a>
+            </li>
+        </ul>
+        <div class="sidebar-footer">
+            <p>© 2025 Waste 2 Wings</p>
+        </div>
+    </aside>
+
+    <div class="main-content">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div id="userNavItem">
+                    <div class="user-dropdown">
+                        <button class="user-dropdown-btn">
+                            <i class="fas fa-user-circle"></i>
+                            <span id="navUsername"></span>
+                            <i class="fas fa-caret-down"></i>
+                        </button>
+                        <div class="user-dropdown-content">
+                            <a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                            <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="page-container">
+            <div class="page-header">
+                <h1>Your Order History</h1>
+                <p class="subtitle">A timeline of your eco-friendly purchases. Thank you for making a difference!</p>
+            </div>
+            
+            <div id="orderTimeline">
+                <p class="loading-text">Loading your order history...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check for user session and fetch orders as soon as the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            const navUsernameEl = document.getElementById('navUsername');
+            const userNavItemEl = document.getElementById('userNavItem');
+            const adminSidebarNavItemEl = document.getElementById('adminSidebarNavItem');
+
+            try {
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                const adminUser = JSON.parse(localStorage.getItem('adminUser'));
+
+                if (!currentUser && !adminUser) {
+                    alert('Please log in first.');
+                    window.location.href = 'login.html';
+                    return;
+                }
+                
+                if (currentUser) {
+                    navUsernameEl.innerText = currentUser.user.name;
+                    // Start fetching orders for the logged-in user
+                    fetchOrderHistory(currentUser.token);
+                } else if (adminUser) {
+                    navUsernameEl.innerText = adminUser.name;
+                    userNavItemEl.classList.add('hidden');
+                    adminSidebarNavItemEl.classList.remove('hidden');
+                    // Admins might have a different view or no orders, handle as needed
+                    const container = document.getElementById('orderHistoryContainer');
+                    container.innerHTML = '<p class="empty-text">Admins do not have a personal order history.</p>';
+                }
+
+            } catch (err) {
+                console.error("Session error:", err.message);
+                localStorage.clear();
+                alert('Session expired. Please log in again.');
+                window.location.href = 'login.html';
+            }
+        });
+
+        // This function fetches and displays the orders
+        async function fetchOrderHistory(token) {
+        const container = document.getElementById('orderHistoryContainer');
+
+        try {
+            const res = await fetch('http://localhost:3001/api/orders/my-orders', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.message || 'Unable to fetch orders');
+            }
+
+            container.innerHTML = '';
+
+            if (data.length === 0) {
+                container.innerHTML = '<p class="empty-text">You have not placed any orders yet.</p>';
+                return;
+            }
+
+            data.forEach(order => {
+                const orderDiv = document.createElement('div');
+                orderDiv.className = 'order-history-item';
+
+                const items = order.products.map(p =>
+                    `<li>${p.name} - ₹${p.price} × ${p.quantity}</li>`
+                ).join('');
+
+                orderDiv.innerHTML = `
+                    <h4>Order ID: ${order._id}</h4>
+                    <p><strong>Date:</strong> ${new Date(order.createdAt).toLocaleString()}</p>
+                    <p><strong>Total Amount:</strong> ₹${order.totalAmount}</p>
+                    <p><strong>Payment Method:</strong> ${order.paymentMethod}</p>
+                    <p><strong>Products:</strong></p>
+                    <ul>${items}</ul>
+                `;
+
+                container.appendChild(orderDiv);
+            });
+
+        } catch (err) {
+            console.error(err);
+            container.innerHTML = `<p class="error-text">Error: ${err.message}</p>`;
+        }
+    }
+
+        
+        function logout() {
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('adminUser');
+            window.location.href = 'home.html';
+        }
+    </script>
+</body>
+</html>

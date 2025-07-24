@@ -10,17 +10,33 @@ for dashboard:
     <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar" id="navbar">
-        <div class="nav-container">
-            <div class="logo">
-                <i class="fas fa-recycle"></i> Waste 2 Wings
-            </div>
-            <ul class="nav-links">
-                <li><a href="home.html">Home</a></li>
-                <li><a href="home.html#productsection">Products</a></li>
-                <!-- <li id="loginNavItem" class="hidden"><a href="login.html">Login</a></li> -->
-                <li id="userNavItem">
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <i class="fas fa-recycle"></i> Waste 2 Wings
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="home.html"><i class="fas fa-home fa-fw"></i> <span class="link-text">Home</span></a></li>
+            <li><a href="dashboard.html" class="active"><i class="fas fa-tachometer-alt fa-fw"></i> <span class="link-text">Dashboard</span></a></li>
+            <li><a href="home.html#productsection"><i class="fas fa-shopping-bag fa-fw"></i> <span class="link-text">Products</span></a></li>
+            <li><a href="order-history.html"><i class="fas fa-history fa-fw"></i> <span class="link-text">Order History</span></a></li>
+            <li id="adminSidebarNavItem" class="hidden"><a href="admin-panel.html" class="admin-link"><i class="fas fa-lock fa-fw"></i> <span class="link-text">Admin Panel</span></a></li>
+            <li>
+                <a href="home.html" onclick="toggleCart()" class="cart-icon-sidebar">
+                    <i class="fas fa-shopping-cart fa-fw"></i>
+                    <span class="link-text">Cart</span>
+                    <span class="cart-count" id="cartCount">0</span>
+                </a>
+            </li>
+        </ul>
+        <div class="sidebar-footer">
+            <p>© 2025 Waste 2 Wings</p>
+        </div>
+    </aside>
+
+    <div class="main-content">
+        <nav class="navbar" id="navbar">
+            <div class="nav-container">
+                <div id="userNavItem">
                     <div class="user-dropdown">
                         <button class="user-dropdown-btn" id="userDropdownBtn">
                             <i class="fas fa-user-circle"></i>
@@ -32,141 +48,121 @@ for dashboard:
                             <a href="login.html" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
                         </div>
                     </div>
-                </li>
-                <li>
-                    <div class="cart-icon" onclick="toggleCart()">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span class="cart-count" id="cartCount">0</span>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </nav>
-
-    <!-- Dashboard Page -->
-    <div class="page-container">
-        <div class="dashboard-container">
-            <div class="dashboard-header">
-                <h1>Waste to Wings Dashboard</h1>
-                <p>Welcome back to your sustainable waste management portal</p>
-            </div>
-
-            <div class="welcome-section">
-                <h2>Hello, <span class="user-info" id="userName">User</span>!</h2>
-                <p>What would you like to do today?</p>
-            </div>
-
-            <div class="dashboard-grid">
-                <div class="dashboard-card">
-                    <div class="dashboard-card-icon">
-                        <i class="fas fa-shopping-bag"></i>
-                    </div>
-                    <h3>Buy Insect Protein</h3>
-                    <p>Purchase our premium BSF protein products for your needs</p>
-                    <button class="btn-dashboard primary" onclick="window.location.href='home.html#productsSection'">
-                        <i class="fas fa-store"></i> Shop Now
-                    </button>
-                </div>
-                
-                <div class="dashboard-card">
-                    <div class="dashboard-card-icon">
-                        <i class="fas fa-trash-alt"></i>
-                    </div>
-                    <h3>Register as Waste Producer</h3>
-                    <p>List your organization as a waste source for collection</p>
-                    <button class="btn-dashboard secondary" onclick="showWasteForm()">
-                        <i class="fas fa-edit"></i> Register Now
-                    </button>
-                </div>
-                
-                <div class="dashboard-card">
-                    <div class="dashboard-card-icon">
-                        <i class="fas fa-history"></i>
-                    </div>
-                    <h3>Order History</h3>
-                    <p>View your past purchases and waste collection records</p>
-                    <button class="btn-dashboard warning" onclick="showOrderHistory()">
-                        <i class="fas fa-clock"></i> View History
-                    </button>
-                    <div id="orderHistoryContainer" class="mt-4 space-y-4"></div>
-                </div>
-                
-                <div class="dashboard-card">
-                    <div class="dashboard-card-icon">
-                        <i class="fas fa-sign-out-alt"></i>
-                    </div>
-                    <h3>Logout</h3>
-                    <p>Securely logout from your account</p>
-                    <button class="btn-dashboard danger" onclick="logout()">
-                        <i class="fas fa-power-off"></i> Logout
-                    </button>
                 </div>
             </div>
+        </nav>
 
-            <!-- Waste Producer Form (Hidden by default) -->
-            <div class="waste-form hidden" id="wasteForm">
-                <h2 class="form-title">Register as Waste Producer</h2>
-                <form id="wasteProducerForm" onsubmit="submitWasteForm(event)">
-                    <div class="form-row">
-                        <div class="form-control">
-                            <label for="orgName">Organization Name</label>
-                            <input type="text" id="orgName" placeholder="Enter organization name" required>
+        <div class="page-container">
+            <div class="dashboard-container">
+                <div class="dashboard-header">
+                    <h1>Waste to Wings Dashboard</h1>
+                    <p>Welcome back to your sustainable waste management portal</p>
+                </div>
+
+                <div class="welcome-section">
+                    <h2>Hello, <span class="user-info" id="userName">User</span>!</h2>
+                    <p>What would you like to do today?</p>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <div class="dashboard-card-icon">
+                            <i class="fas fa-shopping-bag"></i>
                         </div>
-                        <div class="form-control">
-                            <label for="orgType">Organization Type</label>
-                            <select id="orgType" required>
-                                <option value="">Select type</option>
-                                <option value="temple">Temple</option>
-                                <option value="restaurant">Restaurant</option>
-                                <option value="hotel">Hotel</option>
-                                <option value="market">Market</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
+                        <h3>Buy Insect Protein</h3>
+                        <p>Purchase our premium BSF protein products for your needs</p>
+                        <button class="btn-dashboard primary" onclick="window.location.href='home.html#productsection'">
+                            <i class="fas fa-store"></i> Shop Now
+                        </button>
                     </div>
                     
-                    <div class="form-row">
-                        <div class="form-control">
-                            <label for="contactPerson">Contact Person</label>
-                            <input type="text" id="contactPerson" placeholder="Enter contact person name" required>
+                    <div class="dashboard-card">
+                        <div class="dashboard-card-icon">
+                            <i class="fas fa-trash-alt"></i>
                         </div>
-                        <div class="form-control">
-                            <label for="contactNumber">Contact Number</label>
-                            <input type="tel" id="contactNumber" placeholder="Enter phone number" required>
-                        </div>
+                        <h3>Register as Waste Producer</h3>
+                        <p>List your organization as a waste source for collection</p>
+                        <button class="btn-dashboard secondary" onclick="showWasteForm()">
+                            <i class="fas fa-edit"></i> Register Now
+                        </button>
                     </div>
                     
-                    <div class="form-control">
-                        <label for="address">Full Address</label>
-                        <textarea id="address" rows="3" placeholder="Enter complete address" required></textarea>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-control">
-                            <label for="wasteType">Primary Waste Type</label>
-                            <select id="wasteType" required>
-                                <option value="">Select waste type</option>
-                                <option value="floral">Floral Waste</option>
-                                <option value="food">Food Waste</option>
-                                <option value="both">Both Floral & Food</option>
-                                <option value="other">Other Organic Waste</option>
-                            </select>
+                    <div class="dashboard-card">
+                        <div class="dashboard-card-icon">
+                            <i class="fas fa-history"></i>
                         </div>
-                        <div class="form-control">
-                            <label for="wasteQuantity">Estimated Daily Waste (kg)</label>
-                            <input type="number" id="wasteQuantity" placeholder="Enter quantity in kg" required>
+                        <h3>Order History</h3>
+                        <p>View your past purchases and waste collection records</p>
+                        <button class="btn-dashboard warning" onclick="window.location.href='order-history.html'">
+                            <i class="fas fa-clock"></i> View History
+                        </button>
+                    </div>
+                </div>
+
+                <div class="waste-form hidden" id="wasteForm">
+                    <h2 class="form-title">Register as Waste Producer</h2>
+                    <form id="wasteProducerForm" onsubmit="submitWasteForm(event)">
+                        <div class="form-row">
+                            <div class="form-control">
+                                <label for="orgName">Organization Name</label>
+                                <input type="text" id="orgName" placeholder="Enter organization name" required>
+                            </div>
+                            <div class="form-control">
+                                <label for="orgType">Organization Type</label>
+                                <select id="orgType" required>
+                                    <option value="">Select type</option>
+                                    <option value="temple">Temple</option>
+                                    <option value="restaurant">Restaurant</option>
+                                    <option value="hotel">Hotel</option>
+                                    <option value="market">Market</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="form-control">
-                        <label for="collectionPreferences">Collection Preferences</label>
-                        <textarea id="collectionPreferences" rows="2" placeholder="Preferred days/times for collection"></textarea>
-                    </div>
-                    
-                    <button type="submit" class="submit-btn">
-                        <i class="fas fa-paper-plane"></i> Submit Registration
-                    </button>
-                </form>
+                        
+                        <div class="form-row">
+                            <div class="form-control">
+                                <label for="contactPerson">Contact Person</label>
+                                <input type="text" id="contactPerson" placeholder="Enter contact person name" required>
+                            </div>
+                            <div class="form-control">
+                                <label for="contactNumber">Contact Number</label>
+                                <input type="tel" id="contactNumber" placeholder="Enter phone number" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-control">
+                            <label for="address">Full Address</label>
+                            <textarea id="address" rows="3" placeholder="Enter complete address" required></textarea>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-control">
+                                <label for="wasteType">Primary Waste Type</label>
+                                <select id="wasteType" required>
+                                    <option value="">Select waste type</option>
+                                    <option value="floral">Floral Waste</option>
+                                    <option value="food">Food Waste</option>
+                                    <option value="both">Both Floral & Food</option>
+                                    <option value="other">Other Organic Waste</option>
+                                </select>
+                            </div>
+                            <div class="form-control">
+                                <label for="wasteQuantity">Estimated Daily Waste (kg)</label>
+                                <input type="number" id="wasteQuantity" placeholder="Enter quantity in kg" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-control">
+                            <label for="collectionPreferences">Collection Preferences</label>
+                            <textarea id="collectionPreferences" rows="2" placeholder="Preferred days/times for collection"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-paper-plane"></i> Submit Registration
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -249,63 +245,6 @@ for dashboard:
             document.getElementById('wasteProducerForm').reset();
             wasteForm.classList.add('hidden');
         }
-
-        //show history of order
-        async function showOrderHistory() {
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        const token = currentUser?.token;
-        const name = currentUser?.user?.name;
-
-        const container = document.getElementById('orderHistoryContainer');
-        container.innerHTML = ''; // Clear previous content
-
-        if (!token) {
-            container.innerHTML = '<p class="text-red-500">Please log in to view your order history.</p>';
-            return;
-        }
-
-        try {
-            const res = await fetch('http://localhost:3001/api/orders/my-orders', {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-            throw new Error(data.message || 'Unable to fetch orders');
-        }
-
-        if (data.length === 0) {
-            container.innerHTML = '<p>No past orders found.</p>';
-            return;
-        }
-
-        data.forEach(order => {
-            const orderDiv = document.createElement('div');
-            orderDiv.className = 'order-history-item';
-
-            const items = order.products.map(p => 
-                `<li>${p.name} - ₹${p.price} × ${p.quantity}</li>`
-            ).join('');
-
-            orderDiv.innerHTML = `
-                <h4 class="font-semibold text-lg">Order ID: ${order._id}</h4>
-                <p>Date: ${new Date(order.createdAt).toLocaleString()}</p>
-                <p>Total: ₹${order.totalAmount}</p>
-                <p>Payment Method: ${order.paymentMethod}</p>
-                <ul class="list-disc list-inside mt-2">${items}</ul>
-            `;
-
-            container.appendChild(orderDiv);
-        });
-        }
-        catch (err) {
-            console.error(err);
-            container.innerHTML = `<p class="text-red-500">Error: ${err.message}</p>`;
-        }
-    }
 
     </script>
 </body>
