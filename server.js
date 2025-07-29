@@ -1,11 +1,12 @@
-require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 const dotenv = require('dotenv');
 const cors = require('cors');
+require('dotenv').config();
 
-const connectDB = require('./config/db');
+
+const connectDB = require('./config/db.js');
 
 // Route Imports
 const userRoutes = require('./routes/users');
@@ -15,6 +16,7 @@ const subscriptionRoutes = require('./routes/subscriptions');
 const paymentRoutes = require('./routes/payments');
 const adminRoutes = require('./routes/admin');
 const chatRoutes = require('./routes/chat');
+const contactRoutes = require('./routes/contact');
 
 
 const app = express();
@@ -38,6 +40,7 @@ app.use('/api/subscriptions', subscriptionRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/admin', adminRoutes); // handles /admin/dashboard etc.
 app.use('/api/chat', chatRoutes);
+app.use('/api/contact', contactRoutes);
 
 // Serve Static HTML Routes (views/home.html etc.)
 app.get('/', (req, res) => {
