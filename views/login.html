@@ -223,7 +223,8 @@
             }
     
             try {
-                const res = await fetch('http://localhost:3001/api/users/register', {
+                // ✅ FIXED: Use a relative URL instead of localhost
+                const res = await fetch('/api/users/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, email, password })
@@ -258,7 +259,8 @@
             }
 
             try {
-                const res = await fetch('http://localhost:3001/api/users/login', {
+                // ✅ FIXED: Use a relative URL instead of localhost
+                const res = await fetch('/api/users/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
@@ -273,10 +275,10 @@
                 // ✅ Save user and token
                 localStorage.setItem('currentUser', JSON.stringify({
                     user: {
-                            name: data.name,
-                            email: data.email,
-                            role: data.role
-                        },
+                        name: data.name,
+                        email: data.email,
+                        role: data.role
+                    },
                     token: data.token
                 }));
 
@@ -290,7 +292,7 @@
                 console.error("❌ Login error:", err.message);
                 showAuthError(err.message);
             }
-}
+        }
 
     </script>
     
