@@ -143,7 +143,8 @@
                 currentUser = JSON.parse(user);
                 loginNavItem.classList.add('hidden');
                 userNavItem.classList.remove('hidden');
-                navUsername.textContent = currentUser.name;
+                // This now safely accesses the nested user object
+                navUsername.textContent = currentUser.user.name; 
             } else {
                 loginNavItem.classList.remove('hidden');
                 userNavItem.classList.add('hidden');
@@ -223,7 +224,6 @@
             }
     
             try {
-                // ✅ FIXED: Use a relative URL instead of localhost
                 const res = await fetch('/api/users/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -233,11 +233,14 @@
                 const data = await res.json();
                 if (!res.ok) throw new Error(data.message);
     
+                // ✅ FIXED: Save user data in the same format as login
                 localStorage.setItem('currentUser', JSON.stringify({
-                    token: data.token,
-                    name: data.name,
-                    email: data.email,
-                    role: data.role
+                    user: {
+                        name: data.name,
+                        email: data.email,
+                        role: data.role
+                    },
+                    token: data.token
                 }));
     
                 showAuthSuccess('Account created successfully! Redirecting...');
@@ -259,7 +262,6 @@
             }
 
             try {
-                // ✅ FIXED: Use a relative URL instead of localhost
                 const res = await fetch('/api/users/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -268,11 +270,9 @@
 
                 const data = await res.json();
 
-                console.log("🚀 Full response from backend:", data);
-
                 if (!res.ok) throw new Error(data.message);
 
-                // ✅ Save user and token
+                // Save user and token with the standard nested structure
                 localStorage.setItem('currentUser', JSON.stringify({
                     user: {
                         name: data.name,
@@ -281,7 +281,6 @@
                     },
                     token: data.token
                 }));
-
             
                 showAuthSuccess('Login successful! Redirecting...');
                 setTimeout(() => {
