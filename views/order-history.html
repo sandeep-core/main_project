@@ -738,13 +738,15 @@
                 const adminUser = JSON.parse(localStorage.getItem('adminUser'));
 
                 if (!currentUser && !adminUser) {
-                    alert('Please log in first.');
+                    // Use a non-blocking message or redirect gracefully
+                    console.warn('No user logged in, redirecting to login.');
                     window.location.href = 'login.html';
                     return;
                 }
                 
                 if (currentUser) {
-                    navUsernameEl.innerText = currentUser.user.name;
+                    // This now safely accesses the nested user object
+                    navUsernameEl.innerText = currentUser.user.name; 
                     // Start fetching orders for the logged-in user
                     fetchOrderHistory(currentUser.token);
                 } else if (adminUser) {
@@ -752,8 +754,8 @@
                     userNavItemEl.classList.add('hidden');
                     adminSidebarNavItemEl.classList.remove('hidden');
                     // Admins might have a different view or no orders, handle as needed
-                    const container = document.getElementById('orderHistoryContainer');
-                    container.innerHTML = '<p class="empty-text">Admins do not have a personal order history.</p>';
+                    const timeline = document.getElementById('orderTimeline');
+                    timeline.innerHTML = '<p class="empty-text">Admins do not have a personal order history.</p>';
                 }
 
             } catch (err) {
@@ -766,53 +768,67 @@
 
         // This function fetches and displays the orders
         async function fetchOrderHistory(token) {
-        const container = document.getElementById('orderHistoryContainer');
+            const timeline = document.getElementById('orderTimeline');
 
-        try {
-            const res = await fetch('http://localhost:3001/api/orders/my-orders', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
+            try {
+                // ✅ FIXED: Use a relative URL instead of localhost
+                const res = await fetch('/api/orders/my-orders', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    throw new Error(data.message || 'Unable to fetch orders');
                 }
-            });
 
-            const data = await res.json();
+                timeline.innerHTML = ''; // Clear loading text
 
-            if (!res.ok) {
-                throw new Error(data.message || 'Unable to fetch orders');
+                if (data.length === 0) {
+                    timeline.innerHTML = '<p class="empty-text">You have not placed any orders yet.</p>';
+                    return;
+                }
+
+                data.forEach(order => {
+                    const timelineItem = document.createElement('div');
+                    timelineItem.className = 'timeline-item';
+
+                    const items = order.products.map(p =>
+                        `<li><span>${p.name} (x${p.quantity})</span> <span>₹${p.price * p.quantity}</span></li>`
+                    ).join('');
+
+                    timelineItem.innerHTML = `
+                        <div class="order-card">
+                            <div class="order-card-header">
+                                <div>
+                                    <h4>Order ID: ${order._id}</h4>
+                                    <span class="order-date"><i class="fas fa-calendar-alt"></i> ${new Date(order.createdAt).toLocaleDateString()}</span>
+                                </div>
+                                <span class="order-status status-${order.status.toLowerCase()}">${order.status}</span>
+                            </div>
+                            <div class="order-card-body">
+                                <p><strong>Items Ordered:</strong></p>
+                                <ul>${items}</ul>
+                            </div>
+                            <div class="order-card-footer">
+                                <span class="order-total">Total: ₹${order.totalAmount}</span>
+                                <div class="order-actions">
+                                    <a href="#" class="btn"><i class="fas fa-receipt"></i> View Invoice</a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    timeline.appendChild(timelineItem);
+                });
+
+            } catch (err) {
+                console.error(err);
+                timeline.innerHTML = `<p class="error-text">Error: ${err.message}</p>`;
             }
-
-            container.innerHTML = '';
-
-            if (data.length === 0) {
-                container.innerHTML = '<p class="empty-text">You have not placed any orders yet.</p>';
-                return;
-            }
-
-            data.forEach(order => {
-                const orderDiv = document.createElement('div');
-                orderDiv.className = 'order-history-item';
-
-                const items = order.products.map(p =>
-                    `<li>${p.name} - ₹${p.price} × ${p.quantity}</li>`
-                ).join('');
-
-                orderDiv.innerHTML = `
-                    <h4>Order ID: ${order._id}</h4>
-                    <p><strong>Date:</strong> ${new Date(order.createdAt).toLocaleString()}</p>
-                    <p><strong>Total Amount:</strong> ₹${order.totalAmount}</p>
-                    <p><strong>Payment Method:</strong> ${order.paymentMethod}</p>
-                    <p><strong>Products:</strong></p>
-                    <ul>${items}</ul>
-                `;
-
-                container.appendChild(orderDiv);
-            });
-
-        } catch (err) {
-            console.error(err);
-            container.innerHTML = `<p class="error-text">Error: ${err.message}</p>`;
         }
-    }
 
         
         function logout() {
